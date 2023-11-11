@@ -33,7 +33,7 @@ class ContactForm extends Component {
     const { name, number } = this.state;
 
     return (
-      <form onSubmit={this.handleSubmit}>
+      <form onSubmit={this.handleSubmit} className={styles.form}>
         <label>
           <input
             type="text"
@@ -41,6 +41,7 @@ class ContactForm extends Component {
             placeholder='Name:'
             value={name}
             onChange={this.handleNameChange}
+            className={styles.input}
           />
         </label>
         <label>
@@ -50,6 +51,7 @@ class ContactForm extends Component {
             placeholder='Number:'
             value={number}
             onChange={this.handleNumberChange}
+            className={styles.input}
           />
         </label>
         <button type="submit" className={styles.button}>

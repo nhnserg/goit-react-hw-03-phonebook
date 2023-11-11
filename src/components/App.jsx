@@ -7,8 +7,22 @@ import styles from "./App.module.css";
 export class App extends Component {
   state = {
     contacts: [],
-    filter: "",
+    filter: '',
   };
+
+  componentDidMount() {
+    const savedContacts = JSON.parse(localStorage.getItem('contacts'));
+
+    if (savedContacts) {
+      this.setState({ contacts: savedContacts });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.contacts !== this.state.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+  }
 
   handleFilterChange = (e) => {
     this.setState({ filter: e.target.value });
@@ -17,7 +31,6 @@ export class App extends Component {
   handleSubmit = (newContact) => {
     const { contacts } = this.state;
 
-    // Проверка на наличие контакта с таким именем
     if (contacts.some((contact) => contact.name.toLowerCase() === newContact.name.toLowerCase())) {
       alert(`Contact with name "${newContact.name}" already exists!`);
       return;
