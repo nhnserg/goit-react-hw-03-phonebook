@@ -1,16 +1,57 @@
-export const App = () => {
-  return (
-    <div
-      style={{
-        height: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        fontSize: 40,
-        color: '#010101'
-      }}
-    >
-      React homework template
-    </div>
-  );
-};
+// App.js
+import React, { Component } from "react";
+import ContactForm from "./ContactForm/ContactForm";
+import ContactList from "./ContactList/ContactList";
+import styles from "./App.module.css";
+
+export class App extends Component {
+  state = {
+    contacts: [],
+    filter: "",
+  };
+
+  handleFilterChange = (e) => {
+    this.setState({ filter: e.target.value });
+  };
+
+  handleSubmit = (newContact) => {
+    const { contacts } = this.state;
+
+    // Проверка на наличие контакта с таким именем
+    if (contacts.some((contact) => contact.name.toLowerCase() === newContact.name.toLowerCase())) {
+      alert(`Contact with name "${newContact.name}" already exists!`);
+      return;
+    }
+
+    this.setState((prevState) => ({ contacts: [...prevState.contacts, newContact] }));
+  };
+
+  handleDeleteContact = (id) => {
+    this.setState((prevState) => ({
+      contacts: prevState.contacts.filter((contact) => contact.id !== id),
+    }));
+  };
+
+  render() {
+    const { contacts, filter } = this.state;
+    const filteredContacts = contacts.filter((contact) =>
+      contact.name.toLowerCase().includes(filter.toLowerCase())
+    );
+
+    return (
+      <div className={styles.container}>
+        <h1 className={styles.title}>Phonebook</h1>
+        <ContactForm onSubmit={this.handleSubmit} />
+        <h2 className={styles.subtitle}>Contacts</h2>
+        <input
+          type="text"
+          placeholder="Search contacts"
+          value={filter}
+          onChange={this.handleFilterChange}
+          className={styles.input}
+        />
+        <ContactList contacts={filteredContacts} onDeleteContact={this.handleDeleteContact} />
+      </div>
+    );
+  }
+}
